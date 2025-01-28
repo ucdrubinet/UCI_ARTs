@@ -1,1 +1,1 @@
-# VIACS
+# Arteriolosclerosis Segmentation (ArtS)
