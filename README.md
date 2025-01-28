@@ -1,1 +1,1 @@
-# Arteriolosclerosis Segmentation (ArtS) Scerlotic Index and Thickness Extractor (SITE)
+# Arteriolosclerosis Segmentation (ArtS) and Scerlotic Index and Thickness Extractor (SITE)
