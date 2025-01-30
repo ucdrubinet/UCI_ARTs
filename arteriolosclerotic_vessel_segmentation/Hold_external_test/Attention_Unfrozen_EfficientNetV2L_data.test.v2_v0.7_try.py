@@ -41,7 +41,7 @@ sys.path.append('/home/jjlou/Jerry/jerry_packages')
 from jerry_utils import restart_kernel, load_dataset_v1
 import jerry_losses, jerry_metrics 
 
-name = 'Attention_Unfrozen_EfficientNetV2L_v0.7'
+name = 'Attention_Unfrozen_EfficientNetV2L_v0.7_try4'
 batch_size = 30
 epochs = 500
 learning_rate = 1e-2/5
