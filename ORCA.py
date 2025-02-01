@@ -6,7 +6,7 @@ import openslide, czifile
 from jarvis.utils import arrays as jars
 from jarvis.utils.general import tools as jtools
 from jarvis.utils.general import gpus
-from jarvis.tools import show
+# from jarvis.tools import show
 from jarvis.utils.display import montage
 import matplotlib.pyplot as plt
 
@@ -272,7 +272,7 @@ if __name__ == '__main__':
 
 ###### END BLOBS LIBRARY ######
 
-CODE = jtools.get_paths('ws/arterio')['code']
+CODE = './'
 
 def load_region(f, y, x, h=512, w=512, mask=None, **kwargs):
 
@@ -442,7 +442,7 @@ def create_weight_standardization(kernel):
 
     kernel = tf.math.divide_no_nan(kernel - mu, sd)
 
-def create_predictions(fname, model='{}/exps/augs/exp-01-0/hdf5/model_040.hdf5', sfx_thresh=0.78, cnt_thresh=1900, draw_hmap=True, **kwargs):
+def create_predictions(fname, model='model_040.hdf5', sfx_thresh=0.78, cnt_thresh=1900, draw_hmap=True, **kwargs):
 
     # --- Load raw
     f, X, Y, D = load_raw(fname)
@@ -452,8 +452,8 @@ def create_predictions(fname, model='{}/exps/augs/exp-01-0/hdf5/model_040.hdf5',
         'create_weight_standardization': create_weight_standardization})
 
     # --- Loop
-    for y0 in range(0, Y, 512):
-        for x0 in range(0, X, 512):
+    for y0 in range(0, Y, 5120):
+        for x0 in range(0, X, 5120):
 
             print('Running: x = {:07d}/{:07d} | y = {:07d}/{:07d}'.format(x0, X, y0, Y), end='\r', flush=True)
             try:
@@ -464,9 +464,9 @@ def create_predictions(fname, model='{}/exps/augs/exp-01-0/hdf5/model_040.hdf5',
 
             if sfx is not None:
 
-                rat = (dat.shape[0] / 512) * (dat.shape[1] / 512) * D
-
-                output = '{}/data/pngs/{}/{}/{:07d}-sd-{:05d}-y-{:07d}-x-{:07d}.png'.format(
+                rat = (dat.shape[0] / 5120) * (dat.shape[1] / 5120) * D
+                print("hello")
+                output = '{}data/pngs/{}/{}/{:07d}-sd-{:05d}-y-{:07d}-x-{:07d}.png'.format(
                     CODE,
                     fname.split('/')[-2],
                     fname.split('/')[-1][:-4],
@@ -474,7 +474,7 @@ def create_predictions(fname, model='{}/exps/augs/exp-01-0/hdf5/model_040.hdf5',
                     int(np.std(sfx) * 10000),
                     y0,
                     x0)
-                
+                print("hello1")
                 os.makedirs(os.path.dirname(output), exist_ok=True)
 
                 if draw_hmap:
@@ -514,19 +514,32 @@ def filter_pngs(sd=2400, **kwargs):
                 dst = png.replace(subdir, subdir + 'filtered/')
                 shutil.move(src=png, dst=dst)
 
+
+
 if __name__ == '__main__':
 
     # --- Autoselect GPU
     gpus.autoselect()
 
+    # fnames = [
+    #     '/data/raw/wsi_arterio/data/V019_B1_HE/V019_B1_HE.svs',
+	# '/data/raw/wsi_arterio/data/V019_B3_HE/V019_B3_HE.svs'
+    #     ]
+
+    # # --- Create predictions
+    # for fname in fnames:
+    #     create_predictions(fname=fname, draw_hmap=False)
+
+    # # --- Filter predictions
+    # filter_pngs()
+
     fnames = [
-        '/data/raw/wsi_arterio/data/V019_B1_HE/V019_B1_HE.svs',
-	'/data/raw/wsi_arterio/data/V019_B3_HE/V019_B3_HE.svs'
-        ]
+        '/cache/Ajinkya/Arterio/data/V019_B1_HE.svs'        ]
 
     # --- Create predictions
     for fname in fnames:
-        create_predictions(fname=fname, draw_hmap=False)
+        print(fname)
+        create_predictions(fname=fname, draw_hmap=True)
 
     # --- Filter predictions
     filter_pngs()
